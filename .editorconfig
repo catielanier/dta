@@ -1,0 +1,6 @@
+root = true
+
+[*.{css,json,js,babelrc,html,vue}]
+charset = utf-8
+indent_style = tab
+indent_size = 2
