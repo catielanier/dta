@@ -35,6 +35,17 @@ export default new Vuex.Store({
 					}
 				}
 			);
+		},
+		splicePassword: (state, index) => {
+			const { passwords } = state;
+			passwords.splice(index, 1);
+			state.passwords = passwords;
+		},
+		readPasswords: state => {
+			const dataPath = remote.app.getPath("userData");
+			const unparsedJson = fs.readFileSync(`${dataPath}/passwords.json`);
+			const json = JSON.parse(unparsedJson);
+			state.passwords = json.passwords;
 		}
 	},
 	actions: {
@@ -51,13 +62,20 @@ export default new Vuex.Store({
 			commit("addPassword", { siteName, password, dateCreated });
 			commit("setJson");
 		},
-		copyPassword: async ({ state }, { siteName }) => {
+		copyPassword: ({ state }, { siteName }) => {
 			const index = state.passwords.findIndex(x => x.siteName === siteName);
 			const encrypted = state.passwords[index].password;
-			console.log(encrypted);
 			const bytes = CryptoJS.AES.decrypt(encrypted, cryptrSecret);
 			const password = bytes.toString(CryptoJS.enc.Utf8);
 			clipboard.writeText(password);
+		},
+		deletePassword: ({ commit, state }, { siteName }) => {
+			const index = state.passwords.findIndex(x => x.siteName === siteName);
+			commit("splicePassword", index);
+			commit("setJson");
+		},
+		loadPasswords: ({ commit }) => {
+			commit("readPasswords");
 		}
 	}
 });

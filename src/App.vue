@@ -22,3 +22,16 @@
   color: #42b983;
 }
 </style>
+
+<script>
+import { mapActions } from "vuex";
+export default {
+  name: "App",
+  methods: {
+    ...mapActions(["loadPasswords"])
+  },
+  mounted() {
+    this.loadPasswords();
+  }
+};
+</script>
