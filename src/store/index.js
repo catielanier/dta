@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import CryptoJS from "crypto-js";
+import { clipboard } from "electron";
 import randomWords from "random-words";
 import { cryptrSecret } from "../data/constants";
 
@@ -37,7 +38,7 @@ export default new Vuex.Store({
 			console.log(encrypted);
 			const bytes = CryptoJS.AES.decrypt(encrypted, cryptrSecret);
 			const password = bytes.toString(CryptoJS.enc.Utf8);
-			console.log(password);
+			clipboard.writeText(password);
 		}
 	}
 });
