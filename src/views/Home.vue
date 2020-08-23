@@ -9,16 +9,15 @@
         class="inline-block text-gray-800 bg-yellow-500 font-semibold uppercase w-auto px-4 py-3 rounded"
       >Generate Password</router-link>
     </div>
+    <Sites />
   </div>
 </template>
 
 <script>
+import Sites from "../components/Sites";
 // @ is an alias to /src
-import { mapState } from "vuex";
 export default {
   name: "Home",
-  computed: {
-    ...mapState(["passwords"])
-  }
+  components: { Sites }
 };
 </script>

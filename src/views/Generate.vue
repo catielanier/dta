@@ -7,7 +7,7 @@
         class="inline-block text-gray-800 bg-yellow-500 font-semibold uppercase w-auto px-4 py-3 rounded"
       >Back</router-link>
     </div>
-    <form @submit.prevent="generatePassword">
+    <form @submit.prevent="submitPassword">
       <div>
         <input type="checkbox" v-model="includeNumber" /> Include Number
         <input type="checkbox" v-model="includeUpperCase" /> Include Uppercase
@@ -47,7 +47,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["generatePassword"])
+    ...mapActions(["generatePassword"]),
+    submitPassword: function() {
+      const { siteName } = this.$data;
+      this.generatePassword({ siteName });
+    }
   }
 };
 </script>
