@@ -49,8 +49,18 @@ export default {
   methods: {
     ...mapActions(["generatePassword"]),
     submitPassword: function() {
-      const { siteName, includeUpperCase, includeNumber } = this.$data;
-      this.generatePassword({ siteName, includeUpperCase, includeNumber });
+      const {
+        siteName,
+        includeUpperCase,
+        includeNumber,
+        includeSpecial
+      } = this.$data;
+      this.generatePassword({
+        siteName,
+        includeUpperCase,
+        includeNumber,
+        includeSpecial
+      });
     }
   }
 };

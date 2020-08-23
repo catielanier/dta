@@ -4,7 +4,7 @@ import CryptoJS from "crypto-js";
 import { clipboard, remote } from "electron";
 import randomWords from "random-words";
 import fs from "fs";
-import { cryptrSecret } from "../data/constants";
+import { cryptrSecret, specialChars, maxRandomNumber } from "../data/constants";
 
 Vue.use(Vuex);
 
@@ -51,7 +51,7 @@ export default new Vuex.Store({
 	actions: {
 		generatePassword: (
 			{ commit },
-			{ siteName, includeUpperCase, includeNumber }
+			{ siteName, includeUpperCase, includeNumber, includeSpecial }
 		) => {
 			const wordSoup = randomWords(4);
 			if (includeUpperCase) {
@@ -63,11 +63,17 @@ export default new Vuex.Store({
 			}
 			if (includeNumber) {
 				const randomIndex = Math.floor(Math.random() * wordSoup.length);
-				const randomNumber = Math.floor(Math.random() * 999);
+				const randomNumber = Math.floor(Math.random() * maxRandomNumber);
 				wordSoup.splice(randomIndex, 0, randomNumber.toString());
 				wordSoup.join();
 			}
-			console.log("running");
+			if (includeSpecial) {
+				const randomCharacter =
+					specialChars[Math.floor(Math.random() * specialChars.length)];
+				const randomIndex = Math.floor(Math.random() * wordSoup.length);
+				wordSoup.splice(randomIndex, 0, randomCharacter);
+				wordSoup.join();
+			}
 			const unencrypted = wordSoup.join("");
 			console.log(unencrypted);
 			const password = CryptoJS.AES.encrypt(
