@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import CryptoJS from "crypto-js";
-import { clipboard } from "electron";
+import { clipboard, remote } from "electron";
 import randomWords from "random-words";
+import fs from "fs";
 import { cryptrSecret } from "../data/constants";
 
 Vue.use(Vuex);
@@ -17,6 +18,23 @@ export default new Vuex.Store({
 			passwords.push(password);
 			state.passwords = passwords;
 			console.log(state.passwords);
+		},
+		setJson: state => {
+			const { passwords } = state;
+			const json = { passwords };
+			console.log(json);
+			const dataPath = remote.app.getPath("userData");
+			fs.writeFileSync(
+				`${dataPath}/passwords.json`,
+				JSON.stringify(json),
+				err => {
+					if (err) {
+						console.error(err);
+					} else {
+						console.log("Passwords synced");
+					}
+				}
+			);
 		}
 	},
 	actions: {
@@ -31,6 +49,7 @@ export default new Vuex.Store({
 			).toString();
 			const dateCreated = new Date(Date.now());
 			commit("addPassword", { siteName, password, dateCreated });
+			commit("setJson");
 		},
 		copyPassword: async ({ state }, { siteName }) => {
 			const index = state.passwords.findIndex(x => x.siteName === siteName);
