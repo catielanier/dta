@@ -51,7 +51,15 @@ export default new Vuex.Store({
 	actions: {
 		generatePassword: (
 			{ commit },
-			{ siteName, includeUpperCase, includeNumber, includeSpecial }
+			{
+				siteName,
+				includeUpperCase,
+				includeNumber,
+				includeSpecial,
+				characterLimit,
+				minCharacter,
+				maxCharacter
+			}
 		) => {
 			const wordSoup = randomWords(4);
 			if (includeUpperCase) {
@@ -74,8 +82,29 @@ export default new Vuex.Store({
 				wordSoup.splice(randomIndex, 0, randomCharacter);
 				wordSoup.join();
 			}
-			const unencrypted = wordSoup.join("");
-			console.log(unencrypted);
+			let unencrypted = wordSoup.join("");
+			if (characterLimit) {
+				const minimumCheck = () => {
+					const pastMinimum = minCharacter < unencrypted.length;
+					if (pastMinimum) {
+						const randomWord = randomWords();
+						unencrypted = `${unencrypted}${randomWord}`;
+						minimumCheck();
+					}
+				};
+				const maximumCheck = () => {
+					const belowMaximum = maxCharacter > unencrypted.length;
+					if (belowMaximum) {
+						const difference = unencrypted.length - maxCharacter;
+						unencrypted = unencrypted.substring(
+							0,
+							unencrypted.length - difference
+						);
+					}
+				};
+				minimumCheck();
+				maximumCheck();
+			}
 			const password = CryptoJS.AES.encrypt(
 				unencrypted,
 				cryptrSecret

@@ -53,13 +53,19 @@ export default {
         siteName,
         includeUpperCase,
         includeNumber,
-        includeSpecial
+        includeSpecial,
+        characterLimit,
+        minCharacter,
+        maxCharacter
       } = this.$data;
       this.generatePassword({
         siteName,
         includeUpperCase,
         includeNumber,
-        includeSpecial
+        includeSpecial,
+        characterLimit,
+        minCharacter,
+        maxCharacter
       });
     }
   }
