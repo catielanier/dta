@@ -49,7 +49,10 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
-		generatePassword: ({ commit }, { siteName, includeUpperCase }) => {
+		generatePassword: (
+			{ commit },
+			{ siteName, includeUpperCase, includeNumber }
+		) => {
 			const wordSoup = randomWords(4);
 			if (includeUpperCase) {
 				const randomIndex = Math.floor(Math.random() * wordSoup.length);
@@ -57,6 +60,12 @@ export default new Vuex.Store({
 					wordSoup[randomIndex].charAt(0).toUpperCase() +
 					wordSoup[randomIndex].slice(1);
 				wordSoup[randomIndex] = capitalizedWord;
+			}
+			if (includeNumber) {
+				const randomIndex = Math.floor(Math.random() * wordSoup.length);
+				const randomNumber = Math.floor(Math.random() * 999);
+				wordSoup.splice(randomIndex, 0, randomNumber.toString());
+				wordSoup.join();
 			}
 			console.log("running");
 			const unencrypted = wordSoup.join("");
